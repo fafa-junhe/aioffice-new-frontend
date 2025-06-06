@@ -28,11 +28,11 @@ const dummyEmails: Email[] = [
     },
     {
         id: 2,
-        subject: '欢迎使用邮件系统',
+        subject: '团队建设活动',
         sender: 'aaa@example.com',
         unread: true,
-        content: '这是你的第一封邮件。感谢您选择我们的服务，我们将竭诚为您提供优质的电子邮件体验。',
-        receive_time: '2025-05-27T23:43:30.937Z',
+        content: '本季度团队建设活动将于本月25日举行，地点为西山度假村。活动包括团队拓展、烧烤晚宴和篝火晚会。请在本周五前确认是否参加。',
+        receive_time: '2025-06-05T23:43:30.937Z',
     },
 ];
 
@@ -54,7 +54,7 @@ export function Inbox() {
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
     const [composeMode, setComposeMode] = useState(false);
     const [newEmail, setNewEmail] = useState({to: '', subject: '', body: ''});
-    const [leftWidth, setLeftWidth] = useState(25);
+    const [leftWidth, setLeftWidth] = useState(28);
     const containerRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
 
