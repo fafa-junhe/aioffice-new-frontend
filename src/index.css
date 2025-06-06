@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 中文字体定义 */
+@font-face {
+  font-family: 'Noto Sans SC';
+  font-weight: 400;
+  font-display: swap;
+}
+
+html {
+  font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial,
+  'PingFang SC', 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei',
+  'Microsoft JhengHei', 'Source Han Sans SC', 'Noto Sans CJK SC',
+  'Source Han Sans CN', 'Source Han Sans TC', 'Noto Sans CJK TC',
+  'WenQuanYi Micro Hei', SimSun, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@font-face {
+  font-family: 'dd-jingbuti'; /*a name to be used later*/
+  src: url('src/assets/DingTalk JinBuTi.woff2'); /*URL to font*/
+}
+
+.other-font {
+  font-family: 'dd-jingbuti', 'Helvetica Neue', Arial, sans-serif;
+}
