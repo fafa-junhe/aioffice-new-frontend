@@ -54,7 +54,7 @@ export function Inbox() {
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
     const [composeMode, setComposeMode] = useState(false);
     const [newEmail, setNewEmail] = useState({to: '', subject: '', body: ''});
-    const [leftWidth, setLeftWidth] = useState(40);
+    const [leftWidth, setLeftWidth] = useState(25);
     const containerRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
 
@@ -205,7 +205,15 @@ export function Inbox() {
                             </button>
                         </div>
                     </div>
-                ) : null}
+                ) : <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                    <h3 className="text-xl font-medium mb-2">欢迎来到邮件系统</h3>
+                    <p className="max-w-md text-center mb-6">
+                        选择一封邮件开始阅读，或者点击"写邮件"按钮开始撰写新邮件
+                    </p>
+                </div>}
             </div>
         </div>
     );
