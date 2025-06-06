@@ -1,0 +1,4576 @@
+info:
+  title: APIFlask
+  version: 0.1.0
+tags:
+  - name: File
+  - name: Conversation
+  - name: Friend
+  - name: User
+  - name: Group
+  - name: Misc
+  - name: Department
+  - name: Email
+servers:
+  - url: https://api.lrc.fan/
+paths:
+  /api/user:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserOut'
+              example:
+                message: "\u6210\u529F\u521B\u5EFA\u7528\u6237"
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u6CE8\u518C\u65B0\u7528\u6237"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserIn'
+            example:
+              username: johndoe
+              display_name: John Doe
+              password: securePassword123!
+              email: john.doe@example.com
+              email_name: johndoe11
+    put:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateUserOut'
+              example:
+                displayName: John Doe
+                phoneNumber: '+1234567890'
+                bio: Software developer and open source enthusiast
+                avatarId: 1
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - User
+      summary: "\u66F4\u65B0\u5F53\u524D\u767B\u5F55\u7528\u6237\u4FE1\u606F"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserInUpdate'
+            example:
+              displayName: John Doe
+              phoneNumber: '+1234567890'
+              bio: Software developer and open source enthusiast
+              avatarId: 1
+      security:
+        - Access Bearer: []
+  /api/users:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u7528\u6237\u4FE1\u606F"
+                users:
+                  - id: 123
+                    username: johndoe
+                    displayName: John Doe
+                    email: john.doe@example.com
+                    phoneNumber: '+1234567890'
+                    bio: Software developer and open source enthusiast
+                    lastLoginAt: 1672531200
+                    status: active
+                    role: user
+                    settings:
+                      theme: dark
+                      notifications: true
+                    extra_metadata:
+                      joined_at: '2023-01-01'
+                    avatar_url: https://secure.gravatar.com/avatar/
+                    email_account: {}
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - User
+      summary: "\u83B7\u53D6\u6240\u6709\u7528\u6237\u5217\u8868"
+      security:
+        - Access Bearer: []
+  /api/group:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateGroupOut'
+              example:
+                message: "\u6210\u529F\u521B\u5EFA\u7FA4\u7EC4"
+                group:
+                  name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+                  avatar: "\u5047\u88C5\u8FD9\u662F\u4E00\u5F20base64\u56FE\u7247"
+                  conversationId: 1
+                  updateAt: '2025-05-10T16:03:37.486711'
+                  createAt: '2025-05-10T16:03:37.486711'
+                  id: 3
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Group
+      summary: "\u521B\u5EFA\u7FA4\u7EC4"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupIn'
+            example:
+              name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+      security:
+        - Access Bearer: []
+  /api/email:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailOut'
+              example:
+                message: "\u53D1\u9001\u6210\u529F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Email
+      summary: "\u53D1\u9001\u4E00\u5C01\u90AE\u4EF6\uFF08\u53EF\u80FD\u6709bug\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailIn'
+            example:
+              subject: "\u6765\u81EA\u6211\u81EA\u5DF1\u7684\u4E00\u5C01\u4FE1"
+              content: "\u8FD9\u662F\u4E00\u5C01\u6D4B\u8BD5\u90AE\u4EF6"
+              recipient: someone@lrc.fan
+      security:
+        - Access Bearer: []
+  /api/groups:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserGroupsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u7528\u6237\u7FA4\u7EC4"
+                groups:
+                  - name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+                    avatar: "\u5047\u88C5\u8FD9\u662F\u4E00\u5F20base64\u56FE\u7247"
+                    conversationId: 1
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+                    id: 3
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u7528\u6237\u7684\u6240\u6709\u7FA4\u7EC4"
+      security:
+        - Access Bearer: []
+  /api/health:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+              example:
+                message: OK
+          description: Successful response
+      tags:
+        - Misc
+      summary: "\u83B7\u53D6\u670D\u52A1\u5668\u72B6\u6001"
+  /api/emails:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+        - in: query
+          name: type
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: category
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEmailsOut'
+              example:
+                message: "\u6210\u529F\u67E5\u8BE2\u90AE\u4EF6\u5217\u8868"
+                emails:
+                  - id: 1
+                    subject: hello, world
+                    content: thank you
+                    sender: wwx@lrc.fan
+                    recipient: lrc@lrc.fan
+                    msg_id: <123456789@mail.example.com>
+                    tags:
+                      - "\u540C\u4E8B"
+                      - "\u6D4B\u8BD5"
+                      - "\u6280\u672F\u90E8\u95E8"
+                    categories:
+                      - "\u5DE5\u4F5C"
+                      - "\u4EE3\u529E\u4E2D"
+                    isRead: false
+                    isArchived: false
+                    isSpam: false
+                    isTrashed: false
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Email
+      summary: "\u83B7\u53D6\u7528\u6237\u90AE\u4EF6"
+      description: "query\u53C2\u6570:\n- type: all(\u9ED8\u8BA4)|sent|received -\
+        \ \u67E5\u8BE2\u6240\u6709/\u53D1\u9001\u7684/\u6536\u5230\u7684\u90AE\u4EF6"
+      security:
+        - Access Bearer: []
+  /api/friends:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFriendsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u597D\u53CB\u5217\u8868"
+                as_user1:
+                  - id: 1
+                    user1Id: 1
+                    user2Id: 2
+                    lastInteractionAt: '2025-05-10T16:03:37.486711'
+                    conversationId: 1
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+                as_user2:
+                  - id: 2
+                    user1Id: 3
+                    user2Id: 1
+                    lastInteractionAt: '2025-05-09T10:15:22.123456'
+                    conversationId: 2
+                    updateAt: '2025-05-09T10:15:22.123456'
+                    createAt: '2025-05-08T14:30:45.789012'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Friend
+      summary: "\u83B7\u53D6\u6240\u6709\u597D\u53CB"
+      security:
+        - Access Bearer: []
+  /api/auth/code:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendCodeOut'
+              example:
+                message: "\u6210\u529F\u53D1\u9001\u9A8C\u8BC1\u7801\u90AE\u4EF6"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u53D1\u9001\u9A8C\u8BC1\u7801\u7528\u4E8E\u90AE\u4EF6\u767B\u5F55"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendCodeIn'
+            example:
+              email: junhefafa@gmail.com
+  /api/auth/login:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginOut'
+              example:
+                message: "\u6210\u529F\u767B\u5F55"
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u7528\u6237\u767B\u5F55\u83B7\u53D6\u8BBF\u95EE\u4EE4\u724C"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginIn'
+            example:
+              username: johndoe
+              password: securePassword123!
+  /api/file/avatar:
+    post:
+      parameters: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadAvatarOut'
+              example:
+                message: "\u6587\u4EF6\u4E0A\u4F20\u6210\u529F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - File
+      summary: "\u4E0A\u4F20\u5934\u50CF"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadAvatarIn'
+            example:
+              avatar: avatar.png
+      security:
+        - Access Bearer: []
+  /api/departments:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDepartmentsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u90E8\u95E8\u5217\u8868"
+                departments:
+                  - id: 1
+                    name: "\u6280\u672F\u90E8"
+                    parentId: null
+                    description: "\u8D1F\u8D23\u516C\u53F8\u6280\u672F\u7814\u53D1"
+                    createAt: '2024-01-01T00:00:00Z'
+                    updateAt: '2024-01-01T00:00:00Z'
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u83B7\u53D6\u90E8\u95E8\u5217\u8868"
+      security:
+        - Access Bearer: []
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDepartmentOut'
+              example:
+                message: "\u6210\u529F\u521B\u5EFA\u90E8\u95E8"
+                department:
+                  id: 1
+                  name: "\u6280\u672F\u90E8"
+                  parentId: null
+                  description: "\u8D1F\u8D23\u516C\u53F8\u6280\u672F\u7814\u53D1"
+                  createAt: '2024-01-01T00:00:00Z'
+                  updateAt: '2024-01-01T00:00:00Z'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Bad Request
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u521B\u5EFA\u65B0\u90E8\u95E8\uFF08\u9700\u8981\u7BA1\u7406\u5458\
+        \u6743\u9650\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDepartmentInUpdate'
+            example:
+              name: "\u6280\u672F\u90E8"
+              parentId: null
+              description: "\u8D1F\u8D23\u516C\u53F8\u6280\u672F\u7814\u53D1"
+      security:
+        - Access Bearer: []
+  /api/auth/refresh:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenOut'
+              example:
+                message: "\u6210\u529F\u5237\u65B0\u4EE4\u724C"
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - User
+      summary: "\u4F7F\u7528\u5237\u65B0\u4EE4\u724C\u83B7\u53D6\u65B0\u7684\u8BBF\
+        \u95EE\u4EE4\u724C"
+      security:
+        - Refresh Bearer: []
+  /api/users/search:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u7528\u6237\u4FE1\u606F"
+                users:
+                  - id: 123
+                    username: johndoe
+                    displayName: John Doe
+                    email: john.doe@example.com
+                    phoneNumber: '+1234567890'
+                    bio: Software developer and open source enthusiast
+                    lastLoginAt: 1672531200
+                    status: active
+                    role: user
+                    settings:
+                      theme: dark
+                      notifications: true
+                    extra_metadata:
+                      joined_at: '2023-01-01'
+                    avatar_url: https://secure.gravatar.com/avatar/
+                    email_account: {}
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u6A21\u7CCA\u641C\u7D22\u7528\u6237"
+  /api/conversations:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetConversationsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u4F1A\u8BDD\u8BE6\u60C5"
+                conversation:
+                  id: 1
+                  type: group
+                  recentMessage: "Jane Doe: \u4F60\u597D\uFF0C\u4E16\u754C"
+                  createAt: '2025-05-01T09:15:22.654321'
+                  updateAt: '2025-05-10T10:30:45.123456'
+                  members:
+                    - 2
+                    - 999
+                  from: g:1
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Conversation
+      summary: "\u83B7\u53D6\u5F53\u524D\u7528\u6237\u7684\u6240\u6709\u5BF9\u8BDD"
+      security:
+        - Access Bearer: []
+  /api/user/password:
+    put:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordOut'
+              example:
+                message: "\u6210\u529F\u4FEE\u6539\u5BC6\u7801"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not Found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - User
+      summary: "\u66F4\u6539\u5F53\u524D\u7528\u6237\u7684\u5BC6\u7801"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordIn'
+            example:
+              current_password: securePassword123!
+              new_password: newSecurePassword456!
+      security:
+        - Access Bearer: []
+  /api/email/receive:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiveEmailOut'
+              example:
+                message: "\u6210\u529F\u63A5\u6536\u90AE\u4EF6"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - Email
+      summary: "\u63A5\u6536\u90AE\u4EF6\uFF08\u5185\u90E8\u4F7F\u7528\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiveEmailIn'
+            example:
+              email_name: johndoe11
+              subject: hello, world
+              content: thank you
+              recipient: johndoe11@lrc.fan
+              sender: wwx@lrc.fan
+              msg_id: <123456789@mail.example.com>
+  /api/email/account:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEmailAccountOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u90AE\u7BB1\u8D26\u6237"
+                email_account:
+                  id: 1
+                  emailName: lrc
+                  canReceiveOtherDomain: true
+                  doNotice: true
+                  categories:
+                    - "\u5DE5\u4F5C"
+                    - "\u4EE3\u529E\u4E2D"
+                  userId: 1
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Email
+      summary: "\u83B7\u53D6\u7528\u6237\u7684\u90AE\u7BB1\u8D26\u53F7\u76F8\u5173\
+        \u4FE1\u606F"
+      security:
+        - Access Bearer: []
+    put:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateEmailOut'
+              example:
+                message: "\u66F4\u65B0\u6210\u529F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Email
+      summary: "\u4FEE\u6539\u7528\u6237\u7684\u90AE\u7BB1\u8D26\u53F7\u76F8\u5173\
+        \u4FE1\u606F"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEmailInUpdate'
+            example:
+              canReceiveOtherDomain: false
+              doNotice: true
+              categories:
+                - "\u5DE5\u4F5C"
+                - "\u4E2A\u4EBA"
+              tags:
+                - "\u540C\u4E8B"
+                - "\u6D4B\u8BD5"
+      security:
+        - Access Bearer: []
+  /api/emails/search:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+        - in: query
+          name: search_query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchEmailsOut'
+              example:
+                message: "\u6210\u529F\u641C\u7D22\u90AE\u4EF6"
+                emails:
+                  - id: 1
+                    subject: hello, world
+                    content: thank you
+                    sender: wwx@lrc.fan
+                    recipient: lrc@lrc.fan
+                    msg_id: <123456789@mail.example.com>
+                    tags:
+                      - "\u540C\u4E8B"
+                      - "\u6D4B\u8BD5"
+                      - "\u6280\u672F\u90E8\u95E8"
+                    categories:
+                      - "\u5DE5\u4F5C"
+                      - "\u4EE3\u529E\u4E2D"
+                    isRead: false
+                    isArchived: false
+                    isSpam: false
+                    isTrashed: false
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Email
+      summary: "\u641C\u7D22\u7528\u6237\u7684\u90AE\u4EF6"
+      security:
+        - Access Bearer: []
+  /api/file/knowledge:
+    post:
+      parameters: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadKnowledgeOut'
+              example:
+                message: "\u6587\u4EF6\u4E0A\u4F20\u6210\u529F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - File
+      summary: "\u4E0A\u4F20\u4E00\u4E2A\u6587\u4EF6\u5230\u77E5\u8BC6\u5E93\uFF08\
+        \u670D\u52A1\u5668\uFF09"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadKnowledgeIn'
+            example:
+              avatar: avatar.png
+      security:
+        - Access Bearer: []
+  /api/file/{file_id}:
+    get:
+      parameters:
+        - in: path
+          name: file_id
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: download
+          schema:
+            type: boolean
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - File
+      summary: "\u83B7\u53D6\u6587\u4EF6\u4FE1\u606F\u6216\u4E0B\u8F7D\u6587\u4EF6"
+      security:
+        - Access Bearer: []
+    delete:
+      parameters:
+        - in: path
+          name: file_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Generated'
+              example:
+                message: "\u6587\u4EF6\u5220\u9664\u6210\u529F"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - File
+      summary: "\u5220\u9664\u6587\u4EF6"
+      security:
+        - Access Bearer: []
+  /api/user/{user_id}:
+    get:
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: 123
+                username: johndoe
+                displayName: John Doe
+                email: john.doe@example.com
+                phoneNumber: '+1234567890'
+                bio: Software developer and open source enthusiast
+                lastLoginAt: 1672531200
+                status: active
+                role: user
+                settings:
+                  theme: dark
+                  notifications: true
+                extra_metadata:
+                  joined_at: '2023-01-01'
+                avatar_url: https://secure.gravatar.com/avatar/
+                email_account: {}
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - User
+      summary: "\u83B7\u53D6\u7528\u6237\u8BE6\u7EC6\u4FE1\u606F"
+      security:
+        - Access Bearer: []
+  /api/conversation/ai:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIConversationOut'
+              example:
+                message: "\u6210\u529F\u521B\u5EFAai\u4F1A\u8BDD"
+                conversation:
+                  id: 1
+                  type: group
+                  recentMessage: "Jane Doe: \u4F60\u597D\uFF0C\u4E16\u754C"
+                  createAt: '2025-05-01T09:15:22.654321'
+                  updateAt: '2025-05-10T10:30:45.123456'
+                  members:
+                    - 2
+                    - 999
+                  from: g:1
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Conversation
+      summary: "\u521B\u5EFA\u65B0\u7684AI\u5BF9\u8BDD"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAIConversationInUpdate'
+            example:
+              displayName: "\u65B0\u5BF9\u8BDD"
+      security:
+        - Access Bearer: []
+  /api/friend-requests:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFriendRequestsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u597D\u53CB\u8BF7\u6C42\u5217\u8868"
+                sent_friend_requests:
+                  - id: 1
+                    requesterId: 1
+                    targetId: 2
+                    introduction: "\u4F60\u597D\uFF0C\u6211\u662Fxxx"
+                    status: waiting
+                    createAt: '2025-05-10T16:03:37.486711'
+                    updateAt: '2025-05-10T16:03:37.486711'
+                got_friend_requests:
+                  - id: 2
+                    requesterId: 3
+                    targetId: 1
+                    introduction: "\u4F60\u597D\uFF0C\u6211\u662Fxxx"
+                    status: waiting
+                    createAt: '2025-05-09T11:22:33.456789'
+                    updateAt: '2025-05-09T11:22:33.456789'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Friend
+      summary: "\u83B7\u53D6\u6240\u6709\u597D\u53CB\u8BF7\u6C42"
+      security:
+        - Access Bearer: []
+  /api/conversations/ai:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIConversationsOut'
+              example:
+                conversations:
+                  - createAt: '2025-05-18T21:27:16.085468'
+                    displayName: "\u4F60\u597D"
+                    id: 41
+                    members:
+                      - 2
+                      - 999
+                    recentMessage: "ai_friend: \u65E5\u7A0B\u5DF2\u6210\u529F\u521B\u5EFA\
+                    \uFF01\u4EE5\u4E0B"
+                    type: ai
+                    updateAt: '2025-05-18T21:29:10.408959'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Conversation
+      summary: "\u83B7\u53D6\u5F53\u524D\u7528\u6237\u7684\u6240\u6709AI\u5BF9\u8BDD"
+      security:
+        - Access Bearer: []
+  /api/auth/login/email:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginOut'
+              example:
+                message: "\u6210\u529F\u767B\u5F55"
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u7528\u6237\u901A\u8FC7\u90AE\u7BB1\u767B\u5F55\u83B7\u53D6\u8BBF\
+        \u95EE\u4EE4\u724C"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginByEmailIn'
+            example:
+              email: junhefafa@gmail.com
+              code: 123456
+  /api/group/{group_id}:
+    get:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u7FA4\u7EC4\u6D88\u606F"
+                group:
+                  name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+                  avatar: "\u5047\u88C5\u8FD9\u662F\u4E00\u5F20base64\u56FE\u7247"
+                  conversationId: 1
+                  updateAt: '2025-05-10T16:03:37.486711'
+                  createAt: '2025-05-10T16:03:37.486711'
+                  id: 3
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u7FA4\u7EC4\u4FE1\u606F"
+      security:
+        - Access Bearer: []
+    put:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateGroupOut'
+              example:
+                message: "\u6210\u529F\u66F4\u65B0\u7FA4\u7EC4"
+                group:
+                  name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+                  avatar: "\u5047\u88C5\u8FD9\u662F\u4E00\u5F20base64\u56FE\u7247"
+                  conversationId: 1
+                  updateAt: '2025-05-10T16:03:37.486711'
+                  createAt: '2025-05-10T16:03:37.486711'
+                  id: 3
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u4FEE\u6539\u7FA4\u7EC4\u4FE1\u606F"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupUpdate'
+            example:
+              name: "\u7ADE\u8D5B\u961F\u625B\u628A\u5B50"
+              avatar: "\u5047\u88C5\u8FD9\u662F\u4E00\u5F20base64\u56FE\u7247"
+              conversationId: 1
+              updateAt: '2025-05-10T16:03:37.486711'
+              createAt: '2025-05-10T16:03:37.486711'
+              id: 3
+      security:
+        - Access Bearer: []
+    delete:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteGroupOut'
+              example:
+                message: "\u6210\u529F\u5220\u9664\u7FA4\u7EC4"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u5220\u9664\u7FA4\u7EC4"
+      security:
+        - Access Bearer: []
+  /api/friend/{friend_id}:
+    get:
+      parameters:
+        - in: path
+          name: friend_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFriendOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u597D\u53CB\u6570\u636E"
+                friend:
+                  id: 1
+                  user1Id: 1
+                  user2Id: 2
+                  lastInteractionAt: '2025-05-10T16:03:37.486711'
+                  conversationId: 1
+                  updateAt: '2025-05-10T16:03:37.486711'
+                  createAt: '2025-05-10T16:03:37.486711'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Friend
+      summary: "\u83B7\u53D6\u4E00\u4E2A\u597D\u53CB\u7684\u76F8\u5173\u4FE1\u606F"
+      security:
+        - Access Bearer: []
+  /api/user/check-availability:
+    get:
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: email
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: email_name
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckAvailabilityOut'
+              example:
+                message: "\u7528\u6237\u540D\u53EF\u7528"
+                is_available: true
+                field: username
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+        - User
+      summary: "\u68C0\u67E5\u7528\u6237\u540D\u6216\u90AE\u7BB1\u662F\u5426\u53EF\
+        \u7528"
+  /api/group/{group_id}/members:
+    get:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupMembersOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u7FA4\u7EC4\u6210\u5458"
+                members:
+                  - id: 1
+                    groupId: 1
+                    userId: 2
+                    displayName: jane doe
+                    role: owner
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u7FA4\u7EC4\u7684\u6240\u6709\u6210\u5458"
+      security:
+        - Access Bearer: []
+  /api/manageable-join-requests:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupJoinRequestsOut'
+              example:
+                message: "\u6210\u529F\u63D0\u4EA4\u8BF7\u6C42"
+                requests:
+                  - id: 1
+                    groupId: 1
+                    userId: 2
+                    status: waiting
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u5F53\u524D\u7528\u6237\u53EF\u5BA1\u6279\u7684\u52A0\
+        \u7FA4\u8BF7\u6C42\uFF08\u4F5C\u4E3A\u7FA4\u4E3B\u6216\u7BA1\u7406\u5458\uFF09"
+      security:
+        - Access Bearer: []
+  /api/join-request/{request_id}:
+    put:
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum:
+              - approved
+              - rejected
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HandleGroupJoinRequestOut'
+              example:
+                message: "\u6210\u529F\u5BA1\u6279\u52A0\u5165\u8BF7\u6C42"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u5BA1\u6279\u52A0\u7FA4\u8BF7\u6C42"
+      security:
+        - Access Bearer: []
+  /api/email/{email_id}/tags:
+    post:
+      parameters:
+        - in: path
+          name: email_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageOnly'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Email
+      summary: "\u6DFB\u52A0\u90AE\u4EF6\u6807\u7B7E"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTagsIn'
+            example:
+              tags:
+                - "\u91CD\u8981"
+                - "\u9879\u76EEA"
+      security:
+        - Access Bearer: []
+  /api/email/{email_id}/spam:
+    put:
+      parameters:
+        - in: path
+          name: email_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageOnly'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Email
+      summary: "\u6807\u8BB0/\u53D6\u6D88\u6807\u8BB0\u5783\u573E\u90AE\u4EF6"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkSpamIn'
+            example:
+              spam: true
+      security:
+        - Access Bearer: []
+  /api/file/{file_id}/permissions:
+    put:
+      parameters:
+        - in: path
+          name: file_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangeFilePermissionsOut'
+              example:
+                message: "\u6587\u4EF6\u6743\u9650\u4FEE\u6539\u6210\u529F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - File
+      summary: "\u66F4\u65B0\u6587\u4EF6\u7684\u6743\u9650\uFF08\u542B\u77E5\u8BC6\
+        \u5E93\u540C\u6B65\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeFilePermissionsIn'
+            example:
+              userId: '1'
+              isKnowledgeFile: false
+              type: DEPARTMENT
+      security:
+        - Access Bearer: []
+  /api/email/{email_id}/trash:
+    put:
+      parameters:
+        - in: path
+          name: email_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageOnly'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Email
+      summary: "\u79FB\u5165/\u79FB\u51FA\u56DE\u6536\u7AD9"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrashEmailIn'
+            example:
+              trash: true
+      security:
+        - Access Bearer: []
+  /api/email/{email_id}/reply:
+    post:
+      parameters:
+        - in: path
+          name: email_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplyEmailOut'
+              example:
+                message: "\u6210\u529F\u53D1\u9001\u56DE\u590D\u90AE\u4EF6"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Email
+      summary: "\u56DE\u590D\u90AE\u4EF6"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplyEmailIn'
+            example:
+              email_id: 123
+              content: "\u8FD9\u662F\u6211\u7684\u56DE\u590D"
+      security:
+        - Access Bearer: []
+  /api/email/{email_id}/archive:
+    put:
+      parameters:
+        - in: path
+          name: email_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageOnly'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Email
+      summary: "\u5F52\u6863/\u53D6\u6D88\u5F52\u6863\u90AE\u4EF6"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArchiveEmailIn'
+            example:
+              archive: true
+      security:
+        - Access Bearer: []
+  /api/group/{group_id}/announcement:
+    post:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAnnouncementOut'
+              example:
+                message: "\u6210\u529F\u53D1\u5E03\u516C\u544A"
+                announcement:
+                  id: 1
+                  groupId: 1
+                  authorId: 2
+                  title: "\u6807\u9898"
+                  content: "\u5F88\u91CD\u8981\u7684\u4E8B\u60C5"
+                  updateAt: '2025-05-10T16:03:37.486711'
+                  createAt: '2025-05-10T16:03:37.486711'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u53D1\u5E03\u516C\u544A"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnnouncementIn'
+            example:
+              title: "\u6807\u9898"
+              content: "\u5F88\u91CD\u8981\u7684\u4E8B\u60C5"
+      security:
+        - Access Bearer: []
+    delete:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAnnouncementOut'
+              example:
+                message: "\u6210\u529F\u5220\u9664\u516C\u544A\u4FE1\u606F"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u5220\u9664\u4E00\u4E2A\u516C\u544A"
+      security:
+        - Access Bearer: []
+  /api/group/{group_id}/join-request:
+    post:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitGroupJoinRequestOut'
+              example:
+                message: "\u6210\u529F\u63D0\u4EA4\u8BF7\u6C42"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u63D0\u4EA4\u52A0\u7FA4\u8BF7\u6C42"
+      security:
+        - Access Bearer: []
+  /api/friend-request/{target_id}:
+    post:
+      parameters:
+        - in: path
+          name: target_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitFriendRequestOut'
+              example:
+                message: "\u6210\u529F\u53D1\u9001\u597D\u53CB\u8BF7\u6C42"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Friend
+      summary: "\u53D1\u9001\u597D\u53CB\u8BF7\u6C42"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitFriendRequestIn'
+            example:
+              introduction: "\u4F60\u597D\uFF0C\u6211\u662Fxxx"
+      security:
+        - Access Bearer: []
+  /api/group/{group_id}/announcements:
+    get:
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+        - in: path
+          name: group_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAnnouncementsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u516C\u544A\u4FE1\u606F"
+                announcements:
+                  - id: 1
+                    groupId: 1
+                    authorId: 2
+                    title: "\u6807\u9898"
+                    content: "\u5F88\u91CD\u8981\u7684\u4E8B\u60C5"
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u6240\u6709\u4E00\u4E2A\u7FA4\u7EC4\u7684\u516C\u544A"
+      security:
+        - Access Bearer: []
+  /api/group/{group_id}/join-requests:
+    get:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetGroupJoinRequestsOut'
+              example:
+                message: "\u6210\u529F\u63D0\u4EA4\u8BF7\u6C42"
+                requests:
+                  - id: 1
+                    groupId: 1
+                    userId: 2
+                    status: waiting
+                    updateAt: '2025-05-10T16:03:37.486711'
+                    createAt: '2025-05-10T16:03:37.486711'
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u83B7\u53D6\u6240\u6709\u52A0\u7FA4\u8BF7\u6C42"
+      security:
+        - Access Bearer: []
+  /api/friend-request/{request_id}:
+    put:
+      parameters:
+        - in: path
+          name: request_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HandleFriendRequestOut'
+              example:
+                message: "\u6210\u529F\u5BA1\u6279\u597D\u53CB\u8BF7\u6C42"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Friend
+      summary: "\u5BA1\u6279\u597D\u53CB\u8BF7\u6C42"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HandleFriendRequestIn'
+            example:
+              status: approved
+      security:
+        - Access Bearer: []
+  /api/departments/{department_id}:
+    get:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+              example:
+                id: 1
+                name: "\u6280\u672F\u90E8"
+                parentId: null
+                description: "\u8D1F\u8D23\u516C\u53F8\u6280\u672F\u7814\u53D1"
+                createAt: '2024-01-01T00:00:00Z'
+                updateAt: '2024-01-01T00:00:00Z'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u83B7\u53D6\u90E8\u95E8\u8BE6\u60C5"
+      security:
+        - Access Bearer: []
+    put:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDepartmentOut'
+              example:
+                message: "\u6210\u529F\u66F4\u65B0\u90E8\u95E8"
+                department:
+                  id: 1
+                  name: "\u6280\u672F\u90E8"
+                  parentId: null
+                  description: "\u8D1F\u8D23\u516C\u53F8\u6280\u672F\u7814\u53D1"
+                  createAt: '2024-01-01T00:00:00Z'
+                  updateAt: '2024-01-01T00:00:00Z'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Bad Request
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u66F4\u65B0\u90E8\u95E8\u4FE1\u606F\uFF08\u9700\u8981\u7BA1\u7406\
+        \u5458\u6743\u9650\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDepartmentIn'
+            example:
+              name: "\u7814\u53D1\u90E8"
+              parentId: 1
+              description: "\u8D1F\u8D23\u6838\u5FC3\u4EA7\u54C1\u7814\u53D1"
+      security:
+        - Access Bearer: []
+    delete:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: OK
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u5220\u9664\u90E8\u95E8\uFF08\u9700\u8981\u7BA1\u7406\u5458\u6743\
+        \u9650\uFF09"
+      security:
+        - Access Bearer: []
+  /api/conversation/{conversation_id}:
+    get:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetConversationOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u4F1A\u8BDD\u8BE6\u60C5"
+                conversation:
+                  id: 1
+                  type: group
+                  recentMessage: "Jane Doe: \u4F60\u597D\uFF0C\u4E16\u754C"
+                  createAt: '2025-05-01T09:15:22.654321'
+                  updateAt: '2025-05-10T10:30:45.123456'
+                  members:
+                    - 2
+                    - 999
+                  from: g:1
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u83B7\u53D6\u6307\u5B9A\u5BF9\u8BDD\u7684\u4FE1\u606F"
+      security:
+        - Access Bearer: []
+  /api/group/{group_id}/invite/{target_id}:
+    post:
+      parameters:
+        - in: path
+          name: group_id
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: target_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteGroupMemberOut'
+              example:
+                message: "\u6210\u529F\u9080\u8BF7\u6210\u5458\u52A0\u5165\u7FA4\u7EC4"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Group
+      summary: "\u9080\u8BF7\u597D\u53CB\u52A0\u5165\u7FA4\u7EC4"
+      security:
+        - Access Bearer: []
+  /api/conversation/ai/{conversation_id}:
+    put:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIConversationOut'
+              example:
+                message: "\u6210\u529F\u521B\u5EFAai\u4F1A\u8BDD"
+                conversation:
+                  id: 1
+                  type: group
+                  recentMessage: "Jane Doe: \u4F60\u597D\uFF0C\u4E16\u754C"
+                  createAt: '2025-05-01T09:15:22.654321'
+                  updateAt: '2025-05-10T10:30:45.123456'
+                  members:
+                    - 2
+                    - 999
+                  from: g:1
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u66F4\u65B0AI\u5BF9\u8BDD\u7684\u663E\u793A\u540D\u79F0"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAIConversationIn'
+            example:
+              displayName: "Flask\u7A0B\u5E8F\u7F16\u5199"
+      security:
+        - Access Bearer: []
+    delete:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAIConversationsOut'
+              example:
+                message: "\u5220\u9664\u6210\u529F"
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u5220\u9664AI\u5BF9\u8BDD"
+      security:
+        - Access Bearer: []
+  /api/departments/{department_id}/members:
+    get:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          required: false
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 20
+            maximum: 30
+          required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDepartmentMembersOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u90E8\u95E8\u6210\u5458"
+                members:
+                  - id: 1
+                    departmentId: 1
+                    userId: 1
+                    role: member
+                    createAt: '2024-01-01T00:00:00Z'
+                    updateAt: '2024-01-01T00:00:00Z'
+                pagination:
+                  page: 1
+                  per_page: 10
+                  pages: 5
+                  total: 50
+                  current: https://api.example.com/users?page=1&per_page=10
+                  next: https://api.example.com/users?page=2&per_page=10
+                  prev: null
+                  first: https://api.example.com/users?page=1&per_page=10
+                  last: https://api.example.com/users?page=5&per_page=10
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u83B7\u53D6\u90E8\u95E8\u6210\u5458\u5217\u8868\uFF08\u9700\u8981\
+        \u90E8\u95E8\u6210\u5458\u6743\u9650\uFF09"
+      security:
+        - Access Bearer: []
+    post:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddDepartmentMemberOut'
+              example:
+                message: "\u6210\u529F\u6DFB\u52A0\u90E8\u95E8\u6210\u5458"
+                member:
+                  id: 1
+                  departmentId: 1
+                  userId: 1
+                  role: member
+                  createAt: '2024-01-01T00:00:00Z'
+                  updateAt: '2024-01-01T00:00:00Z'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Bad Request
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u6DFB\u52A0\u90E8\u95E8\u6210\u5458\uFF08\u9700\u8981\u90E8\u95E8\
+        \u7BA1\u7406\u5458\u6743\u9650\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDepartmentMemberIn'
+            example:
+              userId: 1
+              role: member
+      security:
+        - Access Bearer: []
+  /api/conversation/{conversation_id}/message:
+    post:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostMessageOut'
+              example:
+                message: "\u6210\u529F\u53D1\u9001\u6D88\u606F"
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u5411\u6307\u5B9A\u5BF9\u8BDD\u53D1\u9001\u6D88\u606F"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMessageIn'
+            example:
+              type: text
+              content: "\u4F60\u597D\uFF0C\u8FD9\u662F\u6D4B\u8BD5\u6D88\u606F"
+              fileId: null
+      security:
+        - Access Bearer: []
+  /api/conversation/{conversation_id}/messages:
+    get:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMessagesOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6\u6D88\u606F\u5217\u8868"
+                messages:
+                  - id: 1
+                    conversationId: 1
+                    userId: 1
+                    type: text
+                    content: Hello there!
+                    fileId: null
+                    createAt: '2025-05-10T10:30:45.123456'
+                    updateAt: '2025-05-10T10:30:45.123456'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u83B7\u53D6\u6307\u5B9A\u5BF9\u8BDD\u5185\u7684\u6D88\u606F\u5217\
+        \u8868\uFF0C\u6309\u521B\u5EFA\u65F6\u95F4\u964D\u5E8F\u6392\u5E8F"
+      security:
+        - Access Bearer: []
+  /api/conversation/ai/{conversation_id}/settings:
+    get:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAIConversationSettingsOut'
+              example:
+                message: "\u6210\u529F\u83B7\u53D6AI\u5BF9\u8BDD\u8BBE\u7F6E"
+                settings:
+                  id: 1
+                  conversationId: 1
+                  knowledge: false
+                  agent: false
+                  createAt: '2025-05-10T10:30:45.123456'
+                  updateAt: '2025-05-10T10:30:45.123456'
+          description: Successful response
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u83B7\u53D6AI\u5BF9\u8BDD\u8BBE\u7F6E"
+      security:
+        - Access Bearer: []
+    put:
+      parameters:
+        - in: path
+          name: conversation_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAIConversationSettingsOut'
+              example:
+                message: "\u6210\u529F\u66F4\u65B0AI\u5BF9\u8BDD\u8BBE\u7F6E"
+                settings:
+                  id: 1
+                  conversationId: 1
+                  knowledge: false
+                  agent: false
+                  createAt: '2025-05-10T10:30:45.123456'
+                  updateAt: '2025-05-10T10:30:45.123456'
+          description: Successful response
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+        - Conversation
+      summary: "\u66F4\u65B0AI\u5BF9\u8BDD\u8BBE\u7F6E"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAIConversationSettingsIn'
+            example:
+              knowledge: true
+              agent: true
+      security:
+        - Access Bearer: []
+  /api/departments/{department_id}/members/{user_id}:
+    delete:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: OK
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u79FB\u9664\u90E8\u95E8\u6210\u5458\uFF08\u9700\u8981\u90E8\u95E8\
+        \u7BA1\u7406\u5458\u6743\u9650\uFF09"
+      security:
+        - Access Bearer: []
+  /api/departments/{department_id}/members/{user_id}/role:
+    put:
+      parameters:
+        - in: path
+          name: department_id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Authentication error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Bad Request
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Internal Server Error
+      tags:
+        - Department
+      summary: "\u66F4\u65B0\u90E8\u95E8\u6210\u5458\u89D2\u8272\uFF08\u9700\u8981\
+        \u90E8\u95E8\u7BA1\u7406\u5458\u6743\u9650\uFF09"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDepartmentMemberRoleIn'
+            example:
+              role: admin
+      security:
+        - Access Bearer: []
+openapi: 3.0.3
+components:
+  schemas:
+    ValidationError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+          example: ''
+      type: object
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    CreateUserIn:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 15
+        display_name:
+          type: string
+          minLength: 3
+          maxLength: 15
+        password:
+          type: string
+          minLength: 6
+          maxLength: 30
+        email:
+          type: string
+          format: email
+        email_name:
+          type: string
+          minLength: 3
+          maxLength: 15
+      required:
+        - display_name
+        - email
+        - email_name
+        - password
+        - username
+    CreateUserOut:
+      type: object
+      properties:
+        message:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+      required:
+        - access_token
+        - refresh_token
+    UpdateUserInUpdate:
+      type: object
+      properties:
+        message:
+          type: string
+        displayName:
+          type: string
+          minLength: 3
+          maxLength: 15
+        phoneNumber:
+          type: string
+          minLength: 3
+          maxLength: 15
+        bio:
+          type: string
+          minLength: 6
+          maxLength: 30
+        avatarId:
+          type: integer
+    UpdateUserOut:
+      type: object
+      properties:
+        password:
+          type: string
+          maxLength: 255
+        username:
+          type: string
+          maxLength: 20
+        displayName:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          maxLength: 255
+        phoneNumber:
+          type: string
+          maxLength: 20
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        lastLoginAt:
+          type: integer
+          nullable: true
+        status:
+          maxLength: 9
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - SUSPENDED
+            - BANNED
+            - PENDING
+            - DELETED
+        role:
+          maxLength: 9
+          type: string
+          enum:
+            - USER
+            - ADMIN
+            - MODERATOR
+            - GUEST
+            - SYSTEM
+        settings:
+          nullable: true
+        extra_metadata:
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+        avatar_url:
+          readOnly: true
+        avatar:
+          readOnly: true
+        profile:
+          readOnly: true
+        stats:
+          readOnly: true
+        schedules_participated:
+          readOnly: true
+        announcements:
+          readOnly: true
+        groups:
+          readOnly: true
+        group_invites:
+          readOnly: true
+        email_account:
+          readOnly: true
+        activity_logs:
+          readOnly: true
+        friendships_as_user1:
+          readOnly: true
+        friendships_as_user2:
+          readOnly: true
+        sent_friend_requests:
+          readOnly: true
+        got_friend_requests:
+          readOnly: true
+        messages:
+          readOnly: true
+        conversations:
+          readOnly: true
+        message:
+          type: string
+      required:
+        - displayName
+        - email
+        - password
+        - role
+        - status
+        - username
+    User:
+      type: object
+      properties:
+        password:
+          type: string
+          maxLength: 255
+        username:
+          type: string
+          maxLength: 20
+        displayName:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          maxLength: 255
+        phoneNumber:
+          type: string
+          maxLength: 20
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        lastLoginAt:
+          type: integer
+          nullable: true
+        status:
+          maxLength: 9
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+            - SUSPENDED
+            - BANNED
+            - PENDING
+            - DELETED
+        role:
+          maxLength: 9
+          type: string
+          enum:
+            - USER
+            - ADMIN
+            - MODERATOR
+            - GUEST
+            - SYSTEM
+        settings:
+          nullable: true
+        extra_metadata:
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+        avatar_url:
+          readOnly: true
+        avatar:
+          readOnly: true
+        profile:
+          readOnly: true
+        stats:
+          readOnly: true
+        schedules_participated:
+          readOnly: true
+        announcements:
+          readOnly: true
+        groups:
+          readOnly: true
+        group_invites:
+          readOnly: true
+        email_account:
+          readOnly: true
+        activity_logs:
+          readOnly: true
+        friendships_as_user1:
+          readOnly: true
+        friendships_as_user2:
+          readOnly: true
+        sent_friend_requests:
+          readOnly: true
+        got_friend_requests:
+          readOnly: true
+        messages:
+          readOnly: true
+        conversations:
+          readOnly: true
+      required:
+        - displayName
+        - email
+        - password
+        - role
+        - status
+        - username
+    PaginationOut:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        pages:
+          type: integer
+        total:
+          type: integer
+        current:
+          type: string
+          format: url
+        next:
+          type: string
+          format: url
+        prev:
+          type: string
+          format: url
+        first:
+          type: string
+          format: url
+        last:
+          type: string
+          format: url
+    GetUsersOut:
+      type: object
+      properties:
+        message:
+          type: string
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    CreateGroupIn:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 0
+          maxLength: 10
+    Group:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        avatar:
+          type: string
+          maxLength: 512
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+    CreateGroupOut:
+      type: object
+      properties:
+        message:
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
+    SendEmailIn:
+      type: object
+      properties:
+        subject:
+          type: string
+        content:
+          type: string
+        recipient:
+          type: string
+      required:
+        - content
+        - recipient
+        - subject
+    SendEmailOut:
+      type: object
+      properties:
+        message:
+          type: string
+    GetUserGroupsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    Status:
+      type: object
+      properties:
+        message:
+          type: string
+    Email:
+      type: object
+      properties:
+        msg_id:
+          type: string
+        subject:
+          type: string
+          nullable: true
+        content:
+          type: string
+          nullable: true
+        sender:
+          type: string
+        recipient:
+          type: string
+        isRead:
+          type: boolean
+          nullable: true
+        isArchived:
+          type: boolean
+          nullable: true
+        isSpam:
+          type: boolean
+          nullable: true
+        isTrashed:
+          type: boolean
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        categories:
+          type: array
+          items:
+            type: string
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - recipient
+        - sender
+    GetEmailsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
+        PaginationOutSchema:
+          $ref: '#/components/schemas/PaginationOut'
+    Friend:
+      type: object
+      properties:
+        user1Id:
+          type: integer
+        user2Id:
+          type: integer
+        lastInteractionAt:
+          type: integer
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - user1Id
+        - user2Id
+    GetFriendsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        as_user1:
+          type: array
+          items:
+            $ref: '#/components/schemas/Friend'
+        as_user2:
+          type: array
+          items:
+            $ref: '#/components/schemas/Friend'
+    SendCodeIn:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    SendCodeOut:
+      type: object
+      properties:
+        message:
+          type: string
+    LoginIn:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 15
+        password:
+          type: string
+          minLength: 6
+          maxLength: 30
+      required:
+        - password
+        - username
+    LoginOut:
+      type: object
+      properties:
+        message:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+      required:
+        - access_token
+        - refresh_token
+    UploadAvatarIn:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    File:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        type:
+          enum:
+            - image
+            - video
+            - audio
+            - document
+            - archive
+            - other
+          maxLength: 8
+        size:
+          type: integer
+        mime_type:
+          type: string
+          maxLength: 100
+        extension:
+          type: string
+          maxLength: 20
+        path:
+          type: string
+          maxLength: 512
+        url:
+          type: string
+          maxLength: 512
+          nullable: true
+        md5:
+          type: string
+          maxLength: 32
+        is_public:
+          type: boolean
+          nullable: true
+        is_knowledge_file:
+          type: boolean
+          nullable: true
+        is_department:
+          type: boolean
+          nullable: true
+        width:
+          type: integer
+          nullable: true
+        height:
+          type: integer
+          nullable: true
+        duration:
+          type: number
+          nullable: true
+        thumbnail:
+          type: string
+          maxLength: 512
+          nullable: true
+        encoding:
+          type: string
+          maxLength: 50
+          nullable: true
+        last_viewed:
+          type: string
+          format: date-time
+          nullable: true
+        view_count:
+          type: integer
+          nullable: true
+        download_count:
+          type: integer
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - extension
+        - md5
+        - mime_type
+        - name
+        - path
+        - size
+        - type
+    UploadAvatarOut:
+      type: object
+      properties:
+        message:
+          type: string
+        file:
+          $ref: '#/components/schemas/File'
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+          nullable: true
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+    GetDepartmentsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        departments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    CreateDepartmentInUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        parentId:
+          type: integer
+          nullable: true
+        description:
+          type: string
+    CreateDepartmentOut:
+      type: object
+      properties:
+        message:
+          type: string
+        department:
+          $ref: '#/components/schemas/Department'
+    RefreshTokenOut:
+      type: object
+      properties:
+        message:
+          type: string
+        access_token:
+          type: string
+      required:
+        - access_token
+    Conversation:
+      type: object
+      properties:
+        from:
+          type: string
+          nullable: true
+        displayName:
+          type: string
+          maxLength: 255
+        recentMessage:
+          type: string
+          maxLength: 255
+          nullable: true
+        type:
+          enum:
+            - ai
+            - group
+            - friend
+          maxLength: 6
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+        members:
+          readOnly: true
+        groups:
+          readOnly: true
+        friends:
+          readOnly: true
+        messages:
+          readOnly: true
+        conversation_members:
+          readOnly: true
+        ai_settings:
+          readOnly: true
+      required:
+        - displayName
+        - type
+    GetConversationsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        conversations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation'
+    ChangePasswordIn:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+      required:
+        - current_password
+        - new_password
+    ChangePasswordOut:
+      type: object
+      properties:
+        message:
+          type: string
+    ReceiveEmailIn:
+      type: object
+      properties:
+        email_name:
+          type: string
+        subject:
+          type: string
+        content:
+          type: string
+        recipient:
+          type: string
+        sender:
+          type: string
+        msg_id:
+          type: string
+      required:
+        - content
+        - email_name
+        - msg_id
+        - recipient
+        - sender
+        - subject
+    ReceiveEmailOut:
+      type: object
+      properties:
+        message:
+          type: string
+    EmailAccount:
+      type: object
+      properties:
+        emailName:
+          type: string
+          maxLength: 255
+        canReceiveOtherDomain:
+          type: boolean
+          nullable: true
+        doNotice:
+          type: boolean
+          nullable: true
+        favoriteEmails:
+          type: array
+          items:
+            type: integer
+          nullable: true
+        categories:
+          type: array
+          items:
+            type: string
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - emailName
+    GetEmailAccountOut:
+      type: object
+      properties:
+        message:
+          type: string
+        email_account:
+          $ref: '#/components/schemas/EmailAccount'
+    UpdateEmailInUpdate:
+      type: object
+      properties:
+        canReceiveOtherDomain:
+          type: boolean
+        doNotice:
+          type: boolean
+        categories:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+    UpdateEmailOut:
+      type: object
+      properties:
+        message:
+          type: string
+    SearchEmailsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    UploadKnowledgeIn:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        isPublic:
+          type: boolean
+        isKnowledgeFile:
+          type: boolean
+        isDepartment:
+          type: boolean
+    UploadKnowledgeOut:
+      type: object
+      properties:
+        message:
+          type: string
+        file:
+          $ref: '#/components/schemas/File'
+    Generated:
+      type: object
+      properties:
+        message:
+          type: string
+    CreateAIConversationInUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: "AI\u5BF9\u8BDD\u7684\u663E\u793A\u540D\u79F0"
+    AIConversationOut:
+      type: object
+      properties:
+        conversation:
+          $ref: '#/components/schemas/Conversation'
+    FriendRequest:
+      type: object
+      properties:
+        requesterId:
+          type: integer
+        targetId:
+          type: integer
+        introduction:
+          type: string
+          maxLength: 512
+        status:
+          enum:
+            - waiting
+            - approved
+            - rejected
+          maxLength: 8
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - introduction
+        - requesterId
+        - status
+        - targetId
+    GetFriendRequestsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        sent_friend_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/FriendRequest'
+        got_friend_requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/FriendRequest'
+    AIConversationsOut:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation'
+      required:
+        - conversations
+    LoginByEmailIn:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        code:
+          type: integer
+      required:
+        - code
+        - email
+    GetGroupOut:
+      type: object
+      properties:
+        message:
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
+    GroupUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        avatar:
+          type: string
+          maxLength: 512
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+    UpdateGroupOut:
+      type: object
+      properties:
+        message:
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
+    DeleteGroupOut:
+      type: object
+      properties:
+        message:
+          type: string
+    GetFriendOut:
+      type: object
+      properties:
+        message:
+          type: string
+        friend:
+          $ref: '#/components/schemas/Friend'
+    CheckAvailabilityOut:
+      type: object
+      properties:
+        message:
+          type: string
+        is_available:
+          type: boolean
+        field:
+          type: string
+      required:
+        - field
+        - is_available
+    GroupMember:
+      type: object
+      properties:
+        userId:
+          type: integer
+        groupId:
+          type: integer
+        displayName:
+          type: string
+          maxLength: 255
+          nullable: true
+        role:
+          enum:
+            - agent
+            - admin
+            - member
+            - owner
+          maxLength: 6
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - groupId
+        - role
+        - userId
+    GetGroupMembersOut:
+      type: object
+      properties:
+        message:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupMember'
+    GroupJoinRequest:
+      type: object
+      properties: {}
+    GetGroupJoinRequestsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupJoinRequest'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    HandleGroupJoinRequestOut:
+      type: object
+      properties:
+        message:
+          type: string
+    AddTagsIn:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - tags
+    MessageOnly:
+      type: object
+      properties:
+        message:
+          type: string
+    MarkSpamIn:
+      type: object
+      properties:
+        spam:
+          type: boolean
+      required:
+        - spam
+    ChangeFilePermissionsIn:
+      type: object
+      properties:
+        userId:
+          type: string
+        isKnowledgeFile:
+          type: boolean
+          description: "\u662F\u5426\u4E3A\u77E5\u8BC6\u5E93\u6587\u4EF6"
+        type:
+          type: string
+          description: "\u77E5\u8BC6\u5E93\u6587\u4EF6\u7684\u6743\u9650\u8303\u56F4\
+            \uFF1APRIVATE\u3001PUBLIC\u3001DEPARTMENT"
+      required:
+        - isKnowledgeFile
+        - type
+        - userId
+    ChangeFilePermissionsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        file:
+          $ref: '#/components/schemas/File'
+    TrashEmailIn:
+      type: object
+      properties:
+        trash:
+          type: boolean
+      required:
+        - trash
+    ReplyEmailIn:
+      type: object
+      properties:
+        email_id:
+          type: integer
+        content:
+          type: string
+      required:
+        - content
+        - email_id
+    ReplyEmailOut:
+      type: object
+      properties:
+        message:
+          type: string
+    ArchiveEmailIn:
+      type: object
+      properties:
+        archive:
+          type: boolean
+      required:
+        - archive
+    CreateAnnouncementIn:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 0
+          maxLength: 10
+        content:
+          type: string
+          minLength: 0
+          maxLength: 255
+      required:
+        - content
+        - title
+    GroupAnnouncement:
+      type: object
+      properties:
+        authorId:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        content:
+          type: string
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - authorId
+        - content
+        - title
+    CreateAnnouncementOut:
+      type: object
+      properties:
+        message:
+          type: string
+        announcement:
+          $ref: '#/components/schemas/GroupAnnouncement'
+    DeleteAnnouncementOut:
+      type: object
+      properties:
+        message:
+          type: string
+    SubmitGroupJoinRequestOut:
+      type: object
+      properties:
+        message:
+          type: string
+    SubmitFriendRequestIn:
+      type: object
+      properties:
+        introduction:
+          type: string
+    SubmitFriendRequestOut:
+      type: object
+      properties:
+        message:
+          type: string
+    GetAnnouncementsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        announcements:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupAnnouncement'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    HandleFriendRequestIn:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - approved
+            - rejected
+    HandleFriendRequestOut:
+      type: object
+      properties:
+        message:
+          type: string
+    UpdateDepartmentIn:
+      type: object
+      properties:
+        name:
+          type: string
+        parentId:
+          type: integer
+        description:
+          type: string
+    UpdateDepartmentOut:
+      type: object
+      properties:
+        message:
+          type: string
+        department:
+          $ref: '#/components/schemas/Department'
+    GetConversationOut:
+      type: object
+      properties:
+        message:
+          type: string
+        conversation:
+          $ref: '#/components/schemas/Conversation'
+    InviteGroupMemberOut:
+      type: object
+      properties:
+        message:
+          type: string
+    UpdateAIConversationIn:
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: "\u65B0\u7684AI\u5BF9\u8BDD\u663E\u793A\u540D\u79F0"
+      required:
+        - displayName
+    DeleteAIConversationsOut:
+      type: object
+      properties:
+        message:
+          type: string
+    DepartmentMember:
+      type: object
+      properties:
+        userId:
+          type: integer
+        role:
+          type: string
+          maxLength: 20
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - userId
+    GetDepartmentMembersOut:
+      type: object
+      properties:
+        message:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentMember'
+        pagination:
+          $ref: '#/components/schemas/PaginationOut'
+    AddDepartmentMemberIn:
+      type: object
+      properties:
+        userId:
+          type: integer
+        role:
+          type: string
+          enum:
+            - admin
+            - member
+      required:
+        - userId
+    AddDepartmentMemberOut:
+      type: object
+      properties:
+        message:
+          type: string
+        member:
+          $ref: '#/components/schemas/DepartmentMember'
+    PostMessageIn:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - text
+            - stream
+            - image
+            - file
+        content:
+          type: string
+        fileId:
+          type: integer
+          nullable: true
+      required:
+        - content
+        - type
+    PostMessageOut:
+      type: object
+      properties:
+        message:
+          type: string
+    Message:
+      type: object
+      properties:
+        conversationId:
+          type: integer
+        userId:
+          type: integer
+        fileId:
+          type: integer
+          nullable: true
+        type:
+          enum:
+            - text
+            - stream
+            - image
+            - file
+          maxLength: 6
+        content:
+          type: string
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - conversationId
+        - type
+        - userId
+    GetMessagesOut:
+      type: object
+      properties:
+        message:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    AIConversationSettings:
+      type: object
+      properties:
+        conversationId:
+          type: integer
+        knowledge:
+          type: boolean
+          nullable: true
+        agent:
+          type: boolean
+          nullable: true
+        id:
+          type: integer
+        createAt:
+          type: string
+          format: date-time
+          nullable: true
+        updateAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - conversationId
+    GetAIConversationSettingsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        settings:
+          $ref: '#/components/schemas/AIConversationSettings'
+    UpdateAIConversationSettingsIn:
+      type: object
+      properties:
+        knowledge:
+          type: boolean
+          description: "\u77E5\u8BC6\u5E93\u8BBE\u7F6E"
+        agent:
+          type: boolean
+          description: "\u667A\u80FD\u4F53\u8BBE\u7F6E"
+    UpdateAIConversationSettingsOut:
+      type: object
+      properties:
+        message:
+          type: string
+        settings:
+          $ref: '#/components/schemas/AIConversationSettings'
+    UpdateDepartmentMemberRoleIn:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - admin
+            - member
+  securitySchemes:
+    Access Bearer:
+      type: apiKey
+      in: header
+      name: Authorization
+    Refresh Bearer:
+      type: apiKey
+      in: header
+      name: Authorization
