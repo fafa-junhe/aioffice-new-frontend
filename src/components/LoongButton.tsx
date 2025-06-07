@@ -7,9 +7,9 @@ export const LoongButton = (props: { onClick?: MouseEventHandler<HTMLButtonEleme
             className={`
               flex items-center gap-1 text-sm
               px-3 py-1.5 rounded-lg
-              border-t-4 border-b-4
+              border-b-4
               bg-${props.level ?? "accent"}-4
-              border-t-transparent border-b-${props.level ?? "accent"}-5
+              border-b-${props.level ?? "accent"}-5
               active:border-t-${props.level ?? "accent"}-1 active:border-b-transparent
               active:translate-y-0.5
               transition-all duration-75
@@ -18,7 +18,9 @@ export const LoongButton = (props: { onClick?: MouseEventHandler<HTMLButtonEleme
             `}
 
         >
+            <span className="relative top-[2px] flex items-center gap-1">
             {props.children}
+            </span>
         </button>
 
     )
