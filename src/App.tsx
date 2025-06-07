@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Theme } from '@radix-ui/themes';
-import { Sidebar } from './components/Sidebar';
+import TopBar from './components/TopBar';
+import FrameWithNav from './components/FrameWithNav';
 import { Dashboard } from './pages/Dashboard';
 import { Inbox } from './pages/Inbox';
 import { Chat } from './pages/Chat';
@@ -21,9 +22,9 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="*" element={
             localStorage.getItem('token') ? (
-              <div className="flex">
-                <Sidebar />
-                <div className="flex-1">
+              <div className="flex flex-col h-screen">
+                <TopBar />
+                <FrameWithNav>
                   <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/inbox" element={<Inbox />} />
@@ -34,7 +35,7 @@ function App() {
                     <Route path="/settings" element={<Settings />} />
                     <Route path="*" element={<Navigate to="/dashboard" />} />
                   </Routes>
-                </div>
+                </FrameWithNav>
               </div>
             ) : (
               <Navigate to="/login" />

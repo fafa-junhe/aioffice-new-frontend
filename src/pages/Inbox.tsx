@@ -6,6 +6,8 @@ import {
     TrashIcon,
     ArrowTopLeftIcon,
 } from '@radix-ui/react-icons';
+import {LoongButton} from "../components/LoongButton.tsx";
+import {Mailbox, MailCheck, MailOpen} from "lucide-react";
 
 // 定义邮件类型
 type Email = {
@@ -107,91 +109,88 @@ export function Inbox() {
     return (
         <div ref={containerRef} className="flex h-screen overflow-hidden">
             <div
-                className="bg-white border-r border-gray-200 overflow-y-auto transition-all duration-150"
+                className="bg-gray-1 border-r shadow-2xl overflow-y-auto"
                 style={{width: `${leftWidth}%`}}
             >
                 <div className="p-4 space-y-2">
                     <div className="flex justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-800">收件箱
+                        <h2 className="text-lg font-semibold ">收件箱
                             ({emails.filter(e => e.unread).length})</h2>
-                        <button
+                        <LoongButton
                             onClick={() => {
                                 setComposeMode(true);
                                 setSelectedEmail(null);
                             }}
-                            className="flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700"
                         >
                             <PlusIcon className="w-4 h-4"/> 写邮件
-                        </button>
+                        </LoongButton>
                     </div>
                     {emails.map((email) => (
                         <div
                             key={email.id}
                             onClick={() => openEmail(email)}
-                            className={`p-3 border rounded-lg cursor-pointer transition-all hover:bg-gray-50 ${email.unread ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'} ${selectedEmail?.id === email.id ? 'ring-2 ring-blue-400' : ''}`}
+                            className={`p-3 border rounded-lg cursor-pointer transition-colors ${selectedEmail?.id === email.id ? 'bg-accent-4 shadow-[0_0_6px_2px_var(--red-4)] border-accent-4' : 'hover:bg-accent-4'}`}
                         >
                             <div className="flex justify-between items-center">
-                                <div className="font-medium text-gray-800 flex items-center gap-2">
+                                <div className="font-medium flex items-center gap-2">
                                     {email.subject}
                                     {email.unread && <span
-                                        className="text-xs text-blue-600 bg-blue-100 rounded px-2 py-0.5">未读</span>}
+                                        className="text-xs bg-accent-3 rounded px-2 py-0.5">未读</span>}
                                 </div>
-                                <span className="text-xs text-gray-400">{timeSince(email.receive_time)}</span>
+                                <span className="text-xs ">{timeSince(email.receive_time)}</span>
                             </div>
-                            <div className="text-sm text-gray-500 truncate">{email.sender}</div>
+                            <div className="text-sm truncate">{email.sender}</div>
                         </div>
                     ))}
                 </div>
             </div>
 
             <div
-                className="w-1.5 cursor-col-resize bg-gray-200 hover:bg-blue-400"
+                className="w-1.5 cursor-col-resize bg-gray-3 hover:bg-accent-3"
                 onMouseDown={() => {
                     isDragging.current = true;
                     document.body.style.cursor = 'col-resize';
                 }}
             />
 
-            <div className="flex-1 h-full overflow-y-auto bg-white">
+            <div className="flex-1 h-full overflow-y-auto bg-gray-1">
                 {composeMode ? (
                     <form onSubmit={sendEmail} className="p-6 max-w-3xl mx-auto space-y-4">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold text-gray-800">撰写邮件</h2>
+                            <h2 className="text-xl font-bold ">撰写邮件</h2>
                             <button type="button" onClick={() => setComposeMode(false)}>
-                                <Cross1Icon className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                <Cross1Icon className="w-5 h-5 "/>
                             </button>
                         </div>
                         <input type="email" placeholder="收件人" value={newEmail.to}
                                onChange={(e) => setNewEmail({...newEmail, to: e.target.value})}
-                               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               className="text-gray-12 dark:text-gray-1 w-full p-3 border rounded-lg "
                                required/>
                         <input type="text" placeholder="主题" value={newEmail.subject}
                                onChange={(e) => setNewEmail({...newEmail, subject: e.target.value})}
-                               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               className="text-gray-12 dark:text-gray-1 w-full p-3 border rounded-lg "
                                required/>
                         <textarea rows={8} placeholder="内容..." value={newEmail.body}
                                   onChange={(e) => setNewEmail({...newEmail, body: e.target.value})}
-                                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                  className="text-gray-12 dark:text-gray-1 w-full p-3 border rounded-lg "
                                   required/>
                         <div className="flex space-x-2">
-                            <button type="submit"
-                                    className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <LoongButton>
                                 <ArrowTopLeftIcon className="mr-2"/>发送
-                            </button>
-                            <button type="button" className="flex items-center border px-4 py-2 rounded-lg"
-                                    onClick={() => setComposeMode(false)}>
+                            </LoongButton>
+                            <LoongButton level="normal" onClick={() => setComposeMode(false)}>
                                 <Cross1Icon className="mr-2"/>取消
-                            </button>
+                            </LoongButton>
                         </div>
                     </form>
                 ) : selectedEmail ? (
                     <div className="p-6 max-w-3xl mx-auto">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-2xl font-bold text-gray-800">{selectedEmail.subject}</h2>
+                            <h2 className="text-2xl font-bold ">{selectedEmail.subject}</h2>
                             <div className="flex space-x-2">
-                                <button className="p-2 rounded hover:bg-gray-100">
-                                    <TrashIcon/>
-                                </button>
+                                <LoongButton>
+                                    <TrashIcon />
+                                </LoongButton>
                             </div>
                         </div>
                         <div className="text-sm text-gray-500 mb-2">
@@ -199,16 +198,13 @@ export function Inbox() {
                         </div>
                         <p className="text-gray-700 whitespace-pre-line">{selectedEmail.content}</p>
                         <div className="mt-6">
-                            <button onClick={replyToEmail}
-                                    className="flex items-center border px-4 py-2 rounded hover:bg-gray-50">
+                            <LoongButton onClick={replyToEmail}>
                                 <ArrowLeftIcon className="mr-2"/> 回复
-                            </button>
+                            </LoongButton>
                         </div>
                     </div>
-                ) : <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                    </svg>
+                ) : <div className="flex flex-col items-center justify-center h-full ">
+                    <MailOpen className="text-3xl size-16 text-gray-9"/>
                     <h3 className="text-xl font-medium mb-2">欢迎来到邮件系统</h3>
                     <p className="max-w-md text-center mb-6">
                         选择一封邮件开始阅读，或者点击"写邮件"按钮开始撰写新邮件

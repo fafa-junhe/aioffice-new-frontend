@@ -15,7 +15,7 @@ export function Settings() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">账户设置</h1>
-      
+
       <form className="space-y-4 max-w-md" onSubmit={handleSubmit}>
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -28,7 +28,7 @@ export function Settings() {
             className="w-full p-2 mt-1 border rounded"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700">
             邮箱
@@ -40,7 +40,7 @@ export function Settings() {
             className="w-full p-2 mt-1 border rounded"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700">
             旧密码
@@ -52,7 +52,7 @@ export function Settings() {
             className="w-full p-2 mt-1 border rounded"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700">
             新密码
@@ -64,10 +64,10 @@ export function Settings() {
             className="w-full p-2 mt-1 border rounded"
           />
         </div>
-        
+
         <button
           type="submit"
-          className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          className="cursor-pointer px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
         >
           保存设置
         </button>

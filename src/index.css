@@ -1,7 +1,12 @@
-@import "tailwindcss";
-
-
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/red-dark.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/mauve-dark.css';
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
+
+
 
 /* 中文字体定义 */
 @font-face {
@@ -17,6 +22,7 @@ html {
   'Source Han Sans CN', 'Source Han Sans TC', 'Noto Sans CJK TC',
   'WenQuanYi Micro Hei', SimSun, sans-serif;
   -webkit-font-smoothing: antialiased;
+  user-select: none;
 }
 
 @font-face {
@@ -27,3 +33,4 @@ html {
 .other-font {
   font-family: 'dd-jingbuti', 'Helvetica Neue', Arial, sans-serif;
 }
+
