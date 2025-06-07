@@ -10,7 +10,8 @@ export const LoongButton = (props: { onClick?: MouseEventHandler<HTMLButtonEleme
               border-b-4
               bg-${props.level ?? "accent"}-4
               border-b-${props.level ?? "accent"}-5
-              active:border-t-${props.level ?? "accent"}-1 active:border-b-transparent
+              active:border-t-${props.level ?? "accent"}-1 
+              active:border-b-transparent
               active:translate-y-0.5
               transition-all duration-75
               hover:shadow-md active:shadow-sm
