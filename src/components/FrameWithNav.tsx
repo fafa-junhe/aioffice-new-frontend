@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
+import  { type ReactNode } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import {Mail, Bot, MessageSquare, Contact, Settings, ListTodo, CompassIcon, Gauge} from 'lucide-react';
-import {DashboardIcon} from "@radix-ui/react-icons";
+import {Mail, Bot, MessageSquare, Contact, Settings, ListTodo, Gauge} from 'lucide-react';
+import * as React from "react";
+import {LoongBreadCrumb} from "./LoongBreadCrumb.tsx";
 
 interface FrameWithNavProps {
   children?: ReactNode;
@@ -20,7 +21,7 @@ const FrameWithNav: React.FC<FrameWithNavProps> = (props) => {
 
   return (
     <div className="bg-gray-4 px-8 flex flex-col h-full">
-      <div className="bg-gray-1 flex items-center p-2 my-4 rounded-md shadow-sm">
+      <div className="bg-gray-1 flex items-center p-2 mt-4 rounded-md shadow-sm">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
@@ -39,8 +40,15 @@ const FrameWithNav: React.FC<FrameWithNavProps> = (props) => {
         ))}
       </div>
       
-      <div className=" flex-1 overflow-auto">
+      <div className="flex flex-col flex-1 ">
         <Outlet />
+          <LoongBreadCrumb links={[{
+              name: "总览",
+              link: "/dashboard"
+          },{
+              name: "邮件",
+              link: "/inbox"
+          }]} currentName="邮件"/>
         {props.children}
       </div>
     </div>

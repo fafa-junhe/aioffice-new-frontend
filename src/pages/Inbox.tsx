@@ -7,7 +7,7 @@ import {
     ArrowTopLeftIcon,
 } from '@radix-ui/react-icons';
 import {LoongButton} from "../components/LoongButton.tsx";
-import {Mailbox, MailCheck, MailOpen} from "lucide-react";
+import {MailOpen} from "lucide-react";
 
 // 定义邮件类型
 type Email = {
@@ -107,9 +107,9 @@ export function Inbox() {
     }, []);
 
     return (
-        <div ref={containerRef} className="flex h-screen overflow-hidden">
+        <div ref={containerRef} className=" flex h-full">
             <div
-                className="bg-gray-1 border-r shadow-2xl overflow-y-auto"
+                className="bg-gray-1 border-r shadow-2xl "
                 style={{width: `${leftWidth}%`}}
             >
                 <div className="p-4 space-y-2">

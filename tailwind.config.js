@@ -42,7 +42,16 @@ export default {
       pattern: /bg-.*-9/
     },
     {
+      pattern: /bg-.*-3/
+    },
+    {
       pattern: /border-b-.*-8/
+    },
+    {
+      pattern: /text-.*-10/
+    },
+    {
+      pattern: /bg-.*-7/
     },
   ],
   plugins: [],

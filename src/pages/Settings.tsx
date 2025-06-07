@@ -13,7 +13,7 @@ export function Settings() {
   };
 
   return (
-    <div className="p-4">
+    <div className="bg-gray-1 p-4">
       <h1 className="text-2xl font-bold mb-6">账户设置</h1>
 
       <form className="space-y-4 max-w-md" onSubmit={handleSubmit}>

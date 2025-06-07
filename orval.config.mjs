@@ -1,4 +1,5 @@
 import { defineConfig } from 'orval';
+import {loongAxios} from "./src/utils/loongAxios.js";
 
 export default defineConfig({
     'api': {
@@ -8,8 +9,14 @@ export default defineConfig({
         'output': {
             'mode': 'tags-split', // 每个接口一个文件，可改成 'single'
             'target': './src/apis', // 输出目录
-            'client': 'react-query', // 自动生成带 React Query hook 的 API 客户端
-            'schemas': './src/apis/model', // 类型定义文件夹
+            'client': 'swr', // 自动生成带 React Query hook 的 API 客户端
+            'httpClient': 'fetch',
+            'override': {
+                'mutator': {
+                    path: './src/utils/loongAxios.ts',
+                    name: 'loongAxios',
+                }
+            }
         },
     },
 });
