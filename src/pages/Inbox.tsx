@@ -121,6 +121,7 @@ export function Inbox() {
                                 setComposeMode(true);
                                 setSelectedEmail(null);
                             }}
+                            className="-mt-1"
                         >
                             <PlusIcon className="w-4 h-4"/> 写邮件
                         </LoongButton>
