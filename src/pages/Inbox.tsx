@@ -7,7 +7,7 @@ import {
     ArrowTopLeftIcon,
 } from '@radix-ui/react-icons';
 import {LoongButton} from "../components/LoongButton.tsx";
-import {Mailbox, MailCheck, MailOpen} from "lucide-react";
+import { MailOpen} from "lucide-react";
 
 // 定义邮件类型
 type Email = {
@@ -121,6 +121,7 @@ export function Inbox() {
                                 setComposeMode(true);
                                 setSelectedEmail(null);
                             }}
+                            className="-mt-1"
                         >
                             <PlusIcon className="w-4 h-4"/> 写邮件
                         </LoongButton>
