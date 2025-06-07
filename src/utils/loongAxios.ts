@@ -26,7 +26,7 @@ const indexedDbStorage = buildStorage({
 
 export const loongAxios = Axios.create();
 // export const axios = instance;
-export const axios = setupCache(instance,
+export const axios = setupCache(loongAxios,
     {
         // As localStorage is a public storage, you can add a prefix
         // to all keys to avoid collisions with other code.
