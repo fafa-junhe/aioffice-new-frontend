@@ -7,7 +7,7 @@ import {
     ArrowTopLeftIcon,
 } from '@radix-ui/react-icons';
 import {LoongButton} from "../components/LoongButton.tsx";
-import {Mailbox, MailCheck, MailOpen} from "lucide-react";
+import { MailOpen} from "lucide-react";
 
 // 定义邮件类型
 type Email = {
